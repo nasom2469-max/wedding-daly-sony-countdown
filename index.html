@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wedding Countdown</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;500;600&display=swap');
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    background: transparent;
+  }
+  body {
+    font-family: "Noto Sans Khmer", "Khmer OS", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  .countdown {
+    width: min(720px, 96vw);
+    padding: 18px 16px 16px;
+    text-align: center;
+    color: #12345b;
+  }
+  .title {
+    font-size: clamp(18px, 3.2vw, 30px);
+    letter-spacing: .04em;
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+  .title::after {
+    content: "✦";
+    display: block;
+    color: #c99a3a;
+    font-size: 14px;
+    margin-top: 6px;
+  }
+  .units {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(6px, 2vw, 18px);
+    align-items: start;
+  }
+  .unit {
+    position: relative;
+    padding: 8px 5px 5px;
+  }
+  .unit:not(:last-child)::after {
+    content: "·";
+    position: absolute;
+    right: calc(clamp(6px, 2vw, 18px) / -2);
+    top: 32%;
+    transform: translateX(50%);
+    color: #c99a3a;
+    font-size: clamp(22px, 4vw, 34px);
+  }
+  .number {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(32px, 7vw, 62px);
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: .03em;
+  }
+  .label {
+    margin-top: 9px;
+    font-size: clamp(12px, 2.2vw, 19px);
+    color: #29496d;
+    font-weight: 400;
+  }
+  .flourish {
+    margin: 13px auto 0;
+    color: #c99a3a;
+    font-size: 18px;
+    letter-spacing: .35em;
+  }
+  @media (max-width: 430px) {
+    .countdown { padding: 10px 4px; }
+    .title { margin-bottom: 8px; }
+    .label { margin-top: 6px; }
+  }
+</style>
+</head>
+<body>
+<div class="countdown" aria-label="Wedding countdown">
+  <div class="title">រាប់ថយក្រោយដល់ថ្ងៃអាពាហ៍ពិពាហ៍</div>
+  <div class="units">
+    <div class="unit"><div id="days" class="number">០</div><div class="label">ថ្ងៃ</div></div>
+    <div class="unit"><div id="hours" class="number">០</div><div class="label">ម៉ោង</div></div>
+    <div class="unit"><div id="minutes" class="number">០</div><div class="label">នាទី</div></div>
+    <div class="unit"><div id="seconds" class="number">០</div><div class="label">វិនាទី</div></div>
+  </div>
+  <div class="flourish">— ✦ —</div>
+</div>
+
+<script>
+const target = new Date("2026-11-12T17:00:00+07:00").getTime();
+const khmerDigits = ["០","១","២","៣","៤","៥","៦","៧","៨","៩"];
+
+function khmerNumber(n) {
+  return String(n).split("").map(ch => khmerDigits[Number(ch)] ?? ch).join("");
+}
+
+function updateCountdown() {
+  let diff = target - Date.now();
+  if (diff < 0) diff = 0;
+
+  const days = Math.floor(diff / 86400000);
+  diff %= 86400000;
+  const hours = Math.floor(diff / 3600000);
+  diff %= 3600000;
+  const minutes = Math.floor(diff / 60000);
+  const seconds = Math.floor((diff % 60000) / 1000);
+
+  document.getElementById("days").textContent = khmerNumber(days);
+  document.getElementById("hours").textContent = khmerNumber(hours).padStart(2, "០");
+  document.getElementById("minutes").textContent = khmerNumber(minutes).padStart(2, "០");
+  document.getElementById("seconds").textContent = khmerNumber(seconds).padStart(2, "០");
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+</script>
+</body>
+</html>
